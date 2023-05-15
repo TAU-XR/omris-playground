@@ -169,16 +169,51 @@ public class TAUXRPlayer : TAUXRSingleton<TAUXRPlayer>
             return;
         }
 
+        Vector3 rightHitPosition;
+        Vector3 leftHitPosition;
+
         RaycastHit hit;
         if (Physics.Raycast(rightEye.position, rightEye.forward, out hit, EYERAYMAXLENGTH))
         {
             focusedObject = hit.transform;
-            eyeGazeHitPosition = hit.point;
+            //eyeGazeHitPosition = hit.point;
+            rightHitPosition = hit.point;
         }
         else
         {
             focusedObject = null;
-            eyeGazeHitPosition = NOTTRACKINGVECTORVALUE;
+            //eyeGazeHitPosition = NOTTRACKINGVECTORVALUE;
+            rightHitPosition = NOTTRACKINGVECTORVALUE;
+        }
+
+        RaycastHit leftEyeHit;
+        if (Physics.Raycast(leftEye.position, leftEye.forward, out leftEyeHit, EYERAYMAXLENGTH))
+        {
+            focusedObject = leftEyeHit.transform;
+            //eyeGazeHitPosition = hit.point;
+            leftHitPosition = leftEyeHit.point;
+        }
+        else
+        {
+            focusedObject = null;
+            //eyeGazeHitPosition = NOTTRACKINGVECTORVALUE;
+            leftHitPosition = NOTTRACKINGVECTORVALUE;
+        }
+
+        if (rightHitPosition != NOTTRACKINGVECTORVALUE && leftHitPosition != NOTTRACKINGVECTORVALUE)
+        {
+            //Vector3 dif = rightHitPosition - leftHitPosition;
+            //eyeGazeHitPosition = leftHitPosition + dif / 2;
+            eyeGazeHitPosition = (leftHitPosition + rightHitPosition) / 2f;
+        }
+        else
+        {
+            if (rightHitPosition != NOTTRACKINGVECTORVALUE)
+                eyeGazeHitPosition = rightHitPosition;
+            else
+            {
+                eyeGazeHitPosition = leftHitPosition;
+            }
         }
 
     }
